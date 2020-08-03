@@ -3,25 +3,25 @@ const search = document.getElementById('search');
 const result = document.getElementById('result');
 const more = document.getElementById('more');
 
-const apiURL = 'https://api.lyrics.ovh';
+const apiURL = 'http://ergast.com/api/f1/seasons';
 
-// Search by song or artist
-async function searchSongs(term) {
-  const res = await fetch(`${apiURL}/suggest/${term}`);
+// Search by seasons
+async function searchSeason(seasons) {
+  const res = await fetch(apiURL);
   const data = await res.json();
 
   showData(data);
 }
 
-// Show song and artist in DOM
+// Show in DOM
 function showData(data) {
   result.innerHTML = `
     <ul class="songs">
       ${data.data
         .map(
-          song => `<li>
-      <span><strong>${song.artist.name}</strong> - ${song.title}</span>
-      <button class="btn" data-artist="${song.artist.name}" data-songtitle="${song.title}">Get Lyrics</button>
+          season => `<li>
+      <span><strong>${seasons}</strong> - ${circuits}</span>
+      <button class="btn" data-artist="${seasons}" data-songtitle="${circuits}">Get Lyrics</button>
     </li>`
         )
         .join('')}
@@ -46,8 +46,8 @@ function showData(data) {
   }
 }
 
-// Get prev and next songs
-async function getMoreSongs(url) {
+// Get prev and next 
+async function getMoreSeasons(url) {
   const res = await fetch(`https://cors-anywhere.herokuapp.com/${url}`);
   const data = await res.json();
 
@@ -55,34 +55,35 @@ async function getMoreSongs(url) {
 }
 
 // Get lyrics for song
-async function getLyrics(artist, songTitle) {
-  const res = await fetch(`${apiURL}/v1/${artist}/${songTitle}`);
-  const data = await res.json();
 
-   if (data.error) {
-        result.innerHTML = data.error;
-   } else {
-        const lyrics = data.lyrics.replace(/(\r\n|\r|\n)/g, '<br>');
+// async function getLyrics(artist, songTitle) {
+//   const res = await fetch(`${apiURL}/v1/${artist}/${songTitle}`);
+//   const data = await res.json();
 
-        result.innerHTML = `
-            <h2><strong>${artist}</strong> - ${songTitle}</h2>
-            <span>${lyrics}</span>
-        `;
-  }
+//    if (data.error) {
+//         result.innerHTML = data.error;
+//    } else {
+//         const lyrics = data.lyrics.replace(/(\r\n|\r|\n)/g, '<br>');
 
-  more.innerHTML = '';
-}
+//         result.innerHTML = `
+//             <h2><strong>${artist}</strong> - ${songTitle}</h2>
+//             <span>${lyrics}</span>
+//         `;
+//   }
+
+//   more.innerHTML = '';
+// }
 
 // Event listeners
 form.addEventListener('submit', e => {
   e.preventDefault();
 
-  const searchTerm = search.value.trim();
+  const searchSeasons = search.value.trim();
 
-  if (!searchTerm) {
-    alert('Please type in a search term');
-  } else {
-    searchSongs(searchTerm);
+  if (!searchSeasons) {
+    alert('Please type in a search ');
+//   } else {
+//     search(searchSeasons);
   }
 });
 
@@ -91,9 +92,9 @@ result.addEventListener('click', e => {
   const clickedEl = e.target;
 
   if (clickedEl.tagName === 'BUTTON') {
-    const artist = clickedEl.getAttribute('data-artist');
-    const songTitle = clickedEl.getAttribute('data-songtitle');
+    const seasons = clickedEl.getAttribute('data-seasons');
+    // const songTitle = clickedEl.getAttribute('data-songtitle');
 
-    getLyrics(artist, songTitle);
+    getMoreSeasons(seasons);
   }
 });
